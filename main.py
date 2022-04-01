@@ -14,6 +14,9 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 
+from webdriver_manager.chrome import ChromeDriverManager
+import telegrambot
+
 apspaceLink = 'https://apspace.apu.edu.my/'
 apspaceDashboard = 'https://apspace.apu.edu.my/tabs/dashboard'
 apspaceAttendix = 'https://apspace.apu.edu.my/attendix/update'
@@ -78,12 +81,12 @@ def otpFound(otpCode):
     otpFound = (dateTime + ' OTP CODE FOUND -> ' + otpCode)
     print(otpFound)
     log((otpFound + '\n'))
+    telegrambot.sendMessage("Attendance is being taken right now!")
 
 def signAttendance(otpCode, username, password):
     options = webdriver.ChromeOptions() 
     options.add_experimental_option("excludeSwitches", ["enable-logging"])
-    service = Service('./chromedriver.exe')
-    browser = webdriver.Chrome(service=service, options=options)
+    browser = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
     browser.get(apspaceLink)
     browser.implicitly_wait(10)
 
@@ -108,9 +111,25 @@ def signAttendance(otpCode, username, password):
     time.sleep(1)
 
     alertMessage = browser.find_element(By.CLASS_NAME, "alert-message").get_attribute("innerHTML") + '\n'
-    print(alertMessage)
-    log((alertMessage + '\n\n'))
     browser.find_element(By.CLASS_NAME, "alert-button").click()
+
+    attendanceSigned(alertMessage)
+
+# Check whether attendance is taken successfully or not
+# If taken successfully - Redirect to attendance page and send telegram message
+def attendanceSigned(alertMessage):
+    dateTime = datetime.now().strftime("%m/%d/%Y, %H:%M:%S ")
+    logText = dateTime + alertMessage
+    log((logText + '\n\n'))
+    print(logText)
+
+    if alertMessage == "Attendance updated":
+        telegrambot.sendMessage("Attendance updated! Have a good rest.")
+    #     Reroute back to attendance page
+    else:
+        telegrambot.sendMessage(alertMessage)
+
+
 
 def log(msg):
     logFile = open("latest.log", "a")
