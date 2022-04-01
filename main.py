@@ -14,6 +14,8 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 
+from webdriver_manager.chrome import ChromeDriverManager
+
 apspaceLink = 'https://apspace.apu.edu.my/'
 apspaceDashboard = 'https://apspace.apu.edu.my/tabs/dashboard'
 apspaceAttendix = 'https://apspace.apu.edu.my/attendix/update'
@@ -82,8 +84,8 @@ def otpFound(otpCode):
 def signAttendance(otpCode, username, password):
     options = webdriver.ChromeOptions() 
     options.add_experimental_option("excludeSwitches", ["enable-logging"])
-    service = Service('./chromedriver.exe')
-    browser = webdriver.Chrome(service=service, options=options)
+    # service = Service('./chromedriver.exe')
+    browser = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
     browser.get(apspaceLink)
     browser.implicitly_wait(10)
 
@@ -115,5 +117,7 @@ def signAttendance(otpCode, username, password):
 def log(msg):
     logFile = open("latest.log", "a")
     logFile.write(msg)
+
+
 
 main()
