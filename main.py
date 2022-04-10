@@ -28,6 +28,8 @@ def main():
         exit()
 
     print('Start Tracking Attendance...\n')
+    telegrambot.sendMessage("------------------------")
+    telegrambot.sendMessage("Start tracking attendance")
     lastSignTime = time.time()
     lastOtpCode = None
 
@@ -54,6 +56,9 @@ def main():
             lastSignTime = time.time()
         gc.collect()
 
+    telegrambot.sendMessage("Program ended")
+    telegrambot.sendMessage("============================")
+
 def getCredentials():
     data = json.loads(open('.\credentials.json', 'r').read())
     return(data['username'], data['password'])
@@ -61,7 +66,7 @@ def getCredentials():
 def getOtpCode():
     while True:
         try:
-            img = ImageGrab.grab()
+            img = ImageGrab.grab(include_layered_windows=True)
         except OSError:
             print('Screen capture permission denied by Operating System, error handled and solved.\n')
         imgNp = np.array(img)

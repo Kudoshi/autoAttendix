@@ -37,13 +37,17 @@ def checkLinkStatus():
     else:
         isLinkTelegram = False
 
+    return isLinkTelegram
+
 def sendMessage(message):
-    if (isLinkTelegram):
+    linkStatus = checkLinkStatus()
+
+    if (linkStatus):
         telegram_send.send(messages=[message])
 
 
 
-checkLinkStatus()
+
 
 # Setup telegram link
 if __name__ == '__main__':
