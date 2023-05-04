@@ -1,4 +1,7 @@
 # autoAttendix
+WARNING: Project outdated. May not work.
+Use the latest AutoAttendix by Bryanc12 instead: https://github.com/bryanc12/autoAttendix2
+
 You may use the included QR Code image files for testing.
 
 ## Requirements
